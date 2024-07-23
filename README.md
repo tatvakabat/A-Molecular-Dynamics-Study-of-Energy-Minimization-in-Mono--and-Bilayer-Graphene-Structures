@@ -5,6 +5,8 @@
 This project involves all software, graphs, and files used in a research internship under NJIT's Prof. Dibakar Datta. The majority of files are graphing files accompanied by the log files being accessed to graph the plots.
 Simulations were run in the Large-scale Atomic/Molecular Massively Parallel Simulator (LAMMPS) CMD software, accompanied with visualization within OVITO.
 
+The main items being studied include energy minimization within graphene structures via determining ideal bond lengths, and layer gap distances to generate stable graphene structures for simulation.
+
 ## Project Structure
 
 - Basics: Folder containing the basic Python syntax learnt.
