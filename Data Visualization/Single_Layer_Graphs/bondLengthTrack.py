@@ -3,36 +3,44 @@ import re
 import matplotlib.pyplot as plt
 
 # Directory containing the log files
-log_dir = r"enter your path here"
+log_dir = r"ADD PATH HERE"
 
-# Regular expressions to extract step and bond length
+# Regular expression to extract step and bond length
 step_pattern = re.compile(r'\s*(\d+)\s+[\d.-]+\s+[\d.-]+\s+[\d.-]+\s+([\d.-]+)')
 
-# Lists to store bond length and step data
-steps = []
-bond_lengths = []
-
-# Function to read the log files and extract data
+# Function to read a log file and extract steps and bond lengths
 def read_log_file(filepath):
+    file_steps = []
+    file_bond_lengths = []
     with open(filepath, 'r') as file:
         for line in file:
             step_match = step_pattern.match(line)
             if step_match:
-                steps.append(int(step_match.group(1)))
-                bond_lengths.append(float(step_match.group(2)))
+                file_steps.append(int(step_match.group(1)))
+                file_bond_lengths.append(float(step_match.group(2)))
+    return file_steps, file_bond_lengths
 
-# Read all log files in the directory
+# Plot setup
+plt.figure(figsize=(10, 6))
+
+# Read and plot each file
 for filename in os.listdir(log_dir):
     if filename.endswith('.lammps'):
         filepath = os.path.join(log_dir, filename)
-        read_log_file(filepath)
+        steps, bond_lengths = read_log_file(filepath)
+        
+        # Format the label: e.g., "log_1.7.lammps" → "C–C 1.7"
+        base_name = os.path.splitext(filename)[0]  # "log_1.7"
+        bond_length = base_name.replace("log_", "")  # "1.7"
+        label = f"C–C {bond_length}"  # Use en dash (–) for clarity
+        
+        plt.plot(steps, bond_lengths, label=label)
 
-# Plot bond length vs. step
-plt.figure(figsize=(10, 6))
-plt.plot(steps, bond_lengths, label='Bond Length')
+# Final plot styling
 plt.xlabel('Step')
 plt.ylabel('Bond Length (Å)')
-plt.title('Bond Length vs. Step')
-plt.legend()
+plt.title('Bond Length vs. Step per Initial Bond')
+plt.legend(title="Initial Bond Length", loc='best')
 plt.grid(True)
+plt.tight_layout()
 plt.show()
